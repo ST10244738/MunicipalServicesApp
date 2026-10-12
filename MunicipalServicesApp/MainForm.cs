@@ -1,3 +1,4 @@
+
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -6,13 +7,13 @@ namespace MunicipalServicesApp
 {
     public partial class MainForm : Form
     {
-        // Cool blue theme colours
-        private Color backgroundBlue = Color.FromArgb(235, 244, 255);
-        private Color darkBlue = Color.FromArgb(25, 55, 109);
-        private Color primaryBlue = Color.FromArgb(37, 99, 235);
-        private Color lightBlue = Color.FromArgb(219, 234, 254);
-        private Color white = Color.White;
-        private Color textDark = Color.FromArgb(31, 41, 55);
+        // theme colours
+        private readonly Color backgroundBlue = Color.FromArgb(235, 244, 255);
+        private readonly Color darkBlue = Color.FromArgb(25, 55, 109);
+        private readonly Color primaryBlue = Color.FromArgb(37, 99, 235);
+        private readonly Color lightBlue = Color.FromArgb(219, 234, 254);
+        private readonly Color white = Color.White;
+        private readonly Color textDark = Color.FromArgb(31, 41, 55);
 
         public MainForm()
         {
@@ -22,175 +23,197 @@ namespace MunicipalServicesApp
 
         private void SetupMainForm()
         {
-            // Form settings
-            this.Text = "Municipal Services Application";
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new Size(900, 600);
-            this.MinimumSize = new Size(750, 500);
-            this.BackColor = backgroundBlue;
+            Text = "Municipal Services Application";
+            StartPosition = FormStartPosition.CenterScreen;
+            Size = new Size(950, 650);
+            MinimumSize = new Size(780, 550);
+            BackColor = backgroundBlue;
+            Font = new Font("Segoe UI", 10F);
 
             CreateInterface();
         }
 
         private void CreateInterface()
         {
-            // Header panel
-            Panel headerPanel = new Panel();
-            headerPanel.Dock = DockStyle.Top;
-            headerPanel.Height = 120;
-            headerPanel.BackColor = darkBlue;
+            // Header
+            Panel headerPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 120,
+                BackColor = darkBlue
+            };
 
-            this.Controls.Add(headerPanel);
+            Label titleLabel = new Label
+            {
+                Text = "Municipal Services",
+                ForeColor = white,
+                Font = new Font("Segoe UI", 26, FontStyle.Bold),
+                AutoSize = true,
+                Location = new Point(30, 20)
+            };
 
-            // Application title
-            Label titleLabel = new Label();
-            titleLabel.Text = "Municipal Services";
-            titleLabel.ForeColor = white;
-            titleLabel.Font = new Font("Segoe UI", 26, FontStyle.Bold);
-            titleLabel.AutoSize = true;
-            titleLabel.Location = new Point(40, 20);
+            Label subtitleLabel = new Label
+            {
+                Text = "Connecting citizens with their municipality",
+                ForeColor = lightBlue,
+                Font = new Font("Segoe UI", 11F),
+                AutoSize = true,
+                Location = new Point(33, 75)
+            };
 
             headerPanel.Controls.Add(titleLabel);
-
-            // Subtitle
-            Label subtitleLabel = new Label();
-            subtitleLabel.Text = "Connecting citizens with their municipality";
-            subtitleLabel.ForeColor = Color.FromArgb(219, 234, 254);
-            subtitleLabel.Font = new Font("Segoe UI", 11);
-            subtitleLabel.AutoSize = true;
-            subtitleLabel.Location = new Point(43, 70);
-
             headerPanel.Controls.Add(subtitleLabel);
 
-            // Welcome message
-            Label welcomeLabel = new Label();
-            welcomeLabel.Text = "How can we help you today?";
-            welcomeLabel.Font = new Font("Segoe UI", 18, FontStyle.Bold);
-            welcomeLabel.ForeColor = textDark;
-            welcomeLabel.AutoSize = true;
-            welcomeLabel.Location = new Point(40, 150);
+            // Responsive content layout
+            TableLayoutPanel mainLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 4,
+                Padding = new Padding(22, 15, 22, 12),
+                BackColor = backgroundBlue
+            };
 
-            this.Controls.Add(welcomeLabel);
+            mainLayout.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50));
+            mainLayout.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 50));
 
-            // Report Issues button
+            mainLayout.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 65));
+            mainLayout.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 42));
+            mainLayout.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 42));
+            mainLayout.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 16));
+
+            // Welcome heading
+            Label welcomeLabel = new Label
+            {
+                Text = "How can we help you today?",
+                Font = new Font("Segoe UI", 18, FontStyle.Bold),
+                ForeColor = textDark,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+
+            mainLayout.Controls.Add(welcomeLabel, 0, 0);
+            mainLayout.SetColumnSpan(welcomeLabel, 2);
+
+            // Report Issues
             Button reportButton = CreateMenuButton(
                 "Report Issues",
-                "Report a municipal problem or request a service",
-                40,
-                205,
-                primaryBlue
-            );
+                "Report a municipal problem",
+                primaryBlue);
 
             reportButton.Click += ReportButton_Click;
+            mainLayout.Controls.Add(reportButton, 0, 1);
 
-            this.Controls.Add(reportButton);
-
-            // Events button
-            Button eventsButton = CreateMenuButton(
-                "Local Events & Announcements",
-                "View upcoming municipal events and announcements",
-                40,
-                325,
-                Color.FromArgb(148, 163, 184)
-            );
-
-            eventsButton.Enabled = false;
-            eventsButton.Text += "  (Coming Soon)";
-
-            this.Controls.Add(eventsButton);
-
-            // Status button
+            // Service Request Status - reserved for Task 3
             Button statusButton = CreateMenuButton(
                 "Service Request Status",
-                "Track the progress of your service requests",
-                470,
-                205,
-                Color.FromArgb(148, 163, 184)
-            );
+                "Coming Soon - Task 3",
+                Color.FromArgb(148, 163, 184));
 
             statusButton.Enabled = false;
-            statusButton.Text += "  (Coming Soon)";
+            mainLayout.Controls.Add(statusButton, 1, 1);
 
-            this.Controls.Add(statusButton);
+            // Local Events - enabled for Part 2
+            Button eventsButton = CreateMenuButton(
+                "Local Events & Announcements",
+                "Explore events and community announcements",
+                primaryBlue);
+
+            eventsButton.Click += EventsButton_Click;
+            mainLayout.Controls.Add(eventsButton, 0, 2);
 
             // Information card
-            Panel infoPanel = new Panel();
-            infoPanel.Location = new Point(470, 325);
-            infoPanel.Size = new Size(370, 120);
-            infoPanel.BackColor = white;
-            infoPanel.BorderStyle = BorderStyle.FixedSingle;
+            Panel infoPanel = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = white,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(8)
+            };
 
-            Label infoTitle = new Label();
-            infoTitle.Text = "About this application";
-            infoTitle.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            infoTitle.ForeColor = darkBlue;
-            infoTitle.AutoSize = true;
-            infoTitle.Location = new Point(20, 15);
+            Label infoTitle = new Label
+            {
+                Text = "About this application",
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                ForeColor = darkBlue,
+                Location = new Point(15, 12),
+                AutoSize = true
+            };
 
-            Label infoText = new Label();
-            infoText.Text =
-                "Use this application to report municipal issues\n" +
-                "and help improve services in your community.";
-            infoText.Font = new Font("Segoe UI", 10);
-            infoText.ForeColor = textDark;
-            infoText.AutoSize = true;
-            infoText.Location = new Point(20, 45);
+            Label infoText = new Label
+            {
+                Text = "Report municipal issues, explore local events\n" +
+                       "and stay informed about your community.",
+                Font = new Font("Segoe UI", 9.5F),
+                ForeColor = textDark,
+                Location = new Point(15, 43),
+                AutoSize = true
+            };
 
             infoPanel.Controls.Add(infoTitle);
             infoPanel.Controls.Add(infoText);
-
-            this.Controls.Add(infoPanel);
+            mainLayout.Controls.Add(infoPanel, 1, 2);
 
             // Footer
-            Label footer = new Label();
-            footer.Text = "Municipal Services Application • South Africa";
-            footer.Font = new Font("Segoe UI", 9);
-            footer.ForeColor = Color.FromArgb(100, 116, 139);
-            footer.AutoSize = true;
-            footer.Location = new Point(40, 510);
+            Label footer = new Label
+            {
+                Text = "Municipal Services Application • South Africa",
+                Font = new Font("Segoe UI", 9F),
+                ForeColor = Color.FromArgb(100, 116, 139),
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleLeft
+            };
 
-            this.Controls.Add(footer);
+            mainLayout.Controls.Add(footer, 0, 3);
+            mainLayout.SetColumnSpan(footer, 2);
+
+            // Add header first, then fill content
+            Controls.Add(mainLayout);
+            Controls.Add(headerPanel);
         }
 
         private Button CreateMenuButton(
             string title,
             string description,
-            int x,
-            int y,
             Color buttonColor)
         {
-            Button button = new Button();
+            Button button = new Button
+            {
+                Text = title + Environment.NewLine + description,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(8),
+                BackColor = buttonColor,
+                ForeColor = white,
+                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                FlatStyle = FlatStyle.Flat,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Cursor = Cursors.Hand
+            };
 
-            button.Text = title;
-            button.Location = new Point(x, y);
-            button.Size = new Size(370, 100);
-
-            button.BackColor = buttonColor;
-            button.ForeColor = white;
-
-            button.Font = new Font(
-                "Segoe UI",
-                13,
-                FontStyle.Bold
-            );
-
-            button.FlatStyle = FlatStyle.Flat;
             button.FlatAppearance.BorderSize = 0;
-
-            button.TextAlign = ContentAlignment.MiddleCenter;
-
-            button.Cursor = Cursors.Hand;
-
-            button.Tag = description;
-
             return button;
         }
 
         private void ReportButton_Click(object sender, EventArgs e)
         {
-            ReportIssueForm reportForm = new ReportIssueForm();
+            using (ReportIssueForm reportForm = new ReportIssueForm())
+            {
+                reportForm.ShowDialog(this);
+            }
+        }
 
-            reportForm.ShowDialog();
+        private void EventsButton_Click(object sender, EventArgs e)
+        {
+            using (EventsForm eventsForm = new EventsForm())
+            {
+                eventsForm.ShowDialog(this);
+            }
         }
     }
 }
