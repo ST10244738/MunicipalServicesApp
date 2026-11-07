@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -205,7 +204,7 @@ namespace MunicipalServicesApp
 
             searchPanel.Controls.Add(btnClear);
 
-            // buttons 
+            // buttons
             searchPanel.Resize += (s, e) =>
             {
                 btnClear.Left =
@@ -651,59 +650,15 @@ namespace MunicipalServicesApp
             eventsPanel.ResumeLayout();
         }
 
-        // RECOMMENDATIONS BASED ON SEARCH PREFERENCES
+        // WEIGHTED RECOMMENDATIONS BASED ON MULTIPLE SEARCH PREFERENCES
+        // This improvement addresses the lecturer's Part 2 feedback.
         private void ShowRecommendations()
         {
             recommendationsPanel.Controls.Clear();
 
-            string preferredTerm = categorySearchCounts
-                .OrderByDescending(pair => pair.Value)
-                .Select(pair => pair.Key)
-                .FirstOrDefault();
+            List<MunicipalEvent> upcomingEvents = GetChronologicalEvents();
 
-            List<MunicipalEvent> recommended;
-
-            if (!string.IsNullOrWhiteSpace(preferredTerm))
-            {
-                // Match the user's most frequent category or search keyword.
-                recommended = GetChronologicalEvents()
-                    .Where(item =>
-                        item.Category.IndexOf(preferredTerm,
-                            StringComparison.OrdinalIgnoreCase) >= 0
-                        || item.Title.IndexOf(preferredTerm,
-                            StringComparison.OrdinalIgnoreCase) >= 0
-                        || item.Description.IndexOf(preferredTerm,
-                            StringComparison.OrdinalIgnoreCase) >= 0)
-                    .Take(3)
-                    .ToList();
-            }
-            else
-            {
-                // Retrieve highest-priority upcoming events.
-                PriorityQueue<MunicipalEvent, int> recommendationQueue =
-                    new PriorityQueue<MunicipalEvent, int>();
-
-                foreach (MunicipalEvent item in GetChronologicalEvents())
-                {
-                    recommendationQueue.Enqueue(item, item.Priority);
-                }
-
-                recommended = new List<MunicipalEvent>();
-
-                while (recommendationQueue.Count > 0 &&
-                       recommended.Count < 3)
-                {
-                    recommended.Add(recommendationQueue.Dequeue());
-                }
-            }
-
-            if (recommended.Count == 0)
-            {
-                // Fallback: show upcoming events if no preference matches.
-                recommended = GetChronologicalEvents().Take(3).ToList();
-            }
-
-            if (recommended.Count == 0)
+            if (upcomingEvents.Count == 0)
             {
                 recommendationsPanel.Controls.Add(new Label
                 {
@@ -712,19 +667,96 @@ namespace MunicipalServicesApp
                     ForeColor = textDark,
                     Margin = new Padding(5, 10, 5, 5)
                 });
+                return;
             }
 
-            foreach (MunicipalEvent item in recommended)
+            // Score every upcoming event against ALL recorded search preferences.
+            // categorySearchCounts contains both searched keywords and selected categories.
+            var scoredEvents = upcomingEvents
+                .Select(item =>
+                {
+                    int score = 0;
+
+                    foreach (KeyValuePair<string, int> preference in categorySearchCounts)
+                    {
+                        string term = preference.Key.Trim();
+                        int searchCount = preference.Value;
+
+                        if (string.IsNullOrWhiteSpace(term) || searchCount <= 0)
+                            continue;
+
+                        // A category match receives the strongest preference score.
+                        if (item.Category.Equals(
+                            term, StringComparison.OrdinalIgnoreCase))
+                        {
+                            score += 5 * searchCount;
+                        }
+
+                        // A title match can also contribute to the score.
+                        if (item.Title.IndexOf(
+                            term, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            score += 3 * searchCount;
+                        }
+
+                        // Description and location matches add further relevance.
+                        if (item.Description.IndexOf(
+                            term, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            score += 2 * searchCount;
+                        }
+
+                        if (item.Location.IndexOf(
+                            term, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            score += searchCount;
+                        }
+                    }
+
+                    // Priority values: 0 is most urgent; larger values are less urgent.
+                    switch (item.Priority)
+                    {
+                        case 0:
+                            score += 4;
+                            break;
+                        case 1:
+                            score += 3;
+                            break;
+                        case 2:
+                            score += 2;
+                            break;
+                        default:
+                            score += 1;
+                            break;
+                    }
+
+                    return new
+                    {
+                        Event = item,
+                        Score = score
+                    };
+                })
+                .OrderByDescending(result => result.Score)
+                .ThenBy(result => result.Event.Date)
+                .ThenBy(result => result.Event.Title)
+                .Take(3)
+                .ToList();
+
+            // Display the highest-scoring recommendations.
+            foreach (var result in scoredEvents)
             {
+                MunicipalEvent item = result.Event;
+
                 Button card = MakeButton(
                     item.Title + Environment.NewLine +
-                    item.Category + " | " +
-                    item.Date.ToString("dd MMM"),
+                    item.Category + " | " + item.Date.ToString("dd MMM") +
+                    Environment.NewLine + "Score: " + result.Score,
                     lightBlue,
                     darkBlue);
 
-                card.Size = new Size(230, 60);
+                card.Size = new Size(230, 75);
                 card.Margin = new Padding(4);
+                card.TextAlign = ContentAlignment.MiddleLeft;
 
                 card.Click += (s, e) =>
                 {

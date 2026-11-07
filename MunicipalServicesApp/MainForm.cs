@@ -7,13 +7,23 @@ namespace MunicipalServicesApp
 {
     public partial class MainForm : Form
     {
-        // theme colours
-        private readonly Color backgroundBlue = Color.FromArgb(235, 244, 255);
-        private readonly Color darkBlue = Color.FromArgb(25, 55, 109);
-        private readonly Color primaryBlue = Color.FromArgb(37, 99, 235);
-        private readonly Color lightBlue = Color.FromArgb(219, 234, 254);
+        // Theme colours
+        private readonly Color backgroundBlue =
+            Color.FromArgb(235, 244, 255);
+
+        private readonly Color darkBlue =
+            Color.FromArgb(25, 55, 109);
+
+        private readonly Color primaryBlue =
+            Color.FromArgb(37, 99, 235);
+
+        private readonly Color lightBlue =
+            Color.FromArgb(219, 234, 254);
+
         private readonly Color white = Color.White;
-        private readonly Color textDark = Color.FromArgb(31, 41, 55);
+
+        private readonly Color textDark =
+            Color.FromArgb(31, 41, 55);
 
         public MainForm()
         {
@@ -76,15 +86,19 @@ namespace MunicipalServicesApp
 
             mainLayout.ColumnStyles.Add(
                 new ColumnStyle(SizeType.Percent, 50));
+
             mainLayout.ColumnStyles.Add(
                 new ColumnStyle(SizeType.Percent, 50));
 
             mainLayout.RowStyles.Add(
                 new RowStyle(SizeType.Absolute, 65));
+
             mainLayout.RowStyles.Add(
                 new RowStyle(SizeType.Percent, 42));
+
             mainLayout.RowStyles.Add(
                 new RowStyle(SizeType.Percent, 42));
+
             mainLayout.RowStyles.Add(
                 new RowStyle(SizeType.Percent, 16));
 
@@ -110,16 +124,16 @@ namespace MunicipalServicesApp
             reportButton.Click += ReportButton_Click;
             mainLayout.Controls.Add(reportButton, 0, 1);
 
-            // Service Request Status - reserved for Task 3
+            // Service Request Status - Task 3
             Button statusButton = CreateMenuButton(
                 "Service Request Status",
-                "Coming Soon - Task 3",
-                Color.FromArgb(148, 163, 184));
+                "Track municipal service requests",
+                primaryBlue);
 
-            statusButton.Enabled = false;
+            statusButton.Click += StatusButton_Click;
             mainLayout.Controls.Add(statusButton, 1, 1);
 
-            // Local Events - enabled for Part 2
+            // Local Events - Part 2
             Button eventsButton = CreateMenuButton(
                 "Local Events & Announcements",
                 "Explore events and community announcements",
@@ -149,7 +163,7 @@ namespace MunicipalServicesApp
             Label infoText = new Label
             {
                 Text = "Report municipal issues, explore local events\n" +
-                       "and stay informed about your community.",
+                       "and track the progress of your service requests.",
                 Font = new Font("Segoe UI", 9.5F),
                 ForeColor = textDark,
                 Location = new Point(15, 43),
@@ -158,6 +172,7 @@ namespace MunicipalServicesApp
 
             infoPanel.Controls.Add(infoTitle);
             infoPanel.Controls.Add(infoText);
+
             mainLayout.Controls.Add(infoPanel, 1, 2);
 
             // Footer
@@ -173,7 +188,7 @@ namespace MunicipalServicesApp
             mainLayout.Controls.Add(footer, 0, 3);
             mainLayout.SetColumnSpan(footer, 2);
 
-            // Add header first, then fill content
+            // Add header and content
             Controls.Add(mainLayout);
             Controls.Add(headerPanel);
         }
@@ -197,22 +212,37 @@ namespace MunicipalServicesApp
             };
 
             button.FlatAppearance.BorderSize = 0;
+
             return button;
         }
 
+        // Part 1 - Report Issues
         private void ReportButton_Click(object sender, EventArgs e)
         {
-            using (ReportIssueForm reportForm = new ReportIssueForm())
+            using (ReportIssueForm reportForm =
+                   new ReportIssueForm())
             {
                 reportForm.ShowDialog(this);
             }
         }
 
+        // Part 2 - Local Events and Announcements
         private void EventsButton_Click(object sender, EventArgs e)
         {
-            using (EventsForm eventsForm = new EventsForm())
+            using (EventsForm eventsForm =
+                   new EventsForm())
             {
                 eventsForm.ShowDialog(this);
+            }
+        }
+
+        // Task 3 - Service Request Status
+        private void StatusButton_Click(object sender, EventArgs e)
+        {
+            using (ServiceRequestStatusForm statusForm =
+                   new ServiceRequestStatusForm())
+            {
+                statusForm.ShowDialog(this);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using MunicipalServicesApp.Models;
+﻿
+using MunicipalServicesApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -109,17 +110,15 @@ namespace MunicipalServicesApp
 
             txtLocation = new TextBox();
 
-            txtLocation.Location =
-                new Point(40, 155);
-
-            txtLocation.Size =
-                new Size(390, 30);
-
-            txtLocation.Font =
-                new Font("Segoe UI", 11);
+            txtLocation.Location = new Point(40, 155);
+            txtLocation.Size = new Size(390, 30);
+            txtLocation.Font = new Font("Segoe UI", 11);
 
             txtLocation.PlaceholderText =
                 "Enter the location of the issue";
+
+            txtLocation.TextChanged +=
+                (sender, e) => UpdateProgress();
 
             this.Controls.Add(txtLocation);
 
@@ -137,14 +136,9 @@ namespace MunicipalServicesApp
 
             cmbCategory = new ComboBox();
 
-            cmbCategory.Location =
-                new Point(470, 155);
-
-            cmbCategory.Size =
-                new Size(390, 30);
-
-            cmbCategory.Font =
-                new Font("Segoe UI", 11);
+            cmbCategory.Location = new Point(470, 155);
+            cmbCategory.Size = new Size(390, 30);
+            cmbCategory.Font = new Font("Segoe UI", 11);
 
             cmbCategory.DropDownStyle =
                 ComboBoxStyle.DropDownList;
@@ -163,6 +157,9 @@ namespace MunicipalServicesApp
                 }
             );
 
+            cmbCategory.SelectedIndexChanged +=
+                (sender, e) => UpdateProgress();
+
             this.Controls.Add(cmbCategory);
 
             // ==========================
@@ -179,14 +176,9 @@ namespace MunicipalServicesApp
 
             txtDescription = new RichTextBox();
 
-            txtDescription.Location =
-                new Point(40, 235);
-
-            txtDescription.Size =
-                new Size(820, 130);
-
-            txtDescription.Font =
-                new Font("Segoe UI", 11);
+            txtDescription.Location = new Point(40, 235);
+            txtDescription.Size = new Size(820, 130);
+            txtDescription.Font = new Font("Segoe UI", 11);
 
             txtDescription.BorderStyle =
                 BorderStyle.FixedSingle;
@@ -210,36 +202,25 @@ namespace MunicipalServicesApp
 
             btnAttach = new Button();
 
-            btnAttach.Text =
-                "📎  Attach File";
-
-            btnAttach.Location =
-                new Point(40, 425);
-
-            btnAttach.Size =
-                new Size(160, 45);
+            btnAttach.Text = "📎  Attach File";
+            btnAttach.Location = new Point(40, 425);
+            btnAttach.Size = new Size(160, 45);
 
             StylePrimaryButton(btnAttach);
 
-            btnAttach.Click +=
-                BtnAttach_Click;
+            btnAttach.Click += BtnAttach_Click;
 
             this.Controls.Add(btnAttach);
 
             lblAttachment = new Label();
 
-            lblAttachment.Text =
-                "No file selected";
-
-            lblAttachment.Font =
-                new Font("Segoe UI", 9);
+            lblAttachment.Text = "No file selected";
+            lblAttachment.Font = new Font("Segoe UI", 9);
 
             lblAttachment.ForeColor =
                 Color.FromArgb(100, 116, 139);
 
-            lblAttachment.Location =
-                new Point(215, 438);
-
+            lblAttachment.Location = new Point(215, 438);
             lblAttachment.AutoSize = true;
 
             this.Controls.Add(lblAttachment);
@@ -250,14 +231,9 @@ namespace MunicipalServicesApp
 
             Panel engagementPanel = new Panel();
 
-            engagementPanel.Location =
-                new Point(40, 490);
-
-            engagementPanel.Size =
-                new Size(820, 80);
-
-            engagementPanel.BackColor =
-                lightBlue;
+            engagementPanel.Location = new Point(40, 490);
+            engagementPanel.Size = new Size(820, 80);
+            engagementPanel.BackColor = lightBlue;
 
             this.Controls.Add(engagementPanel);
 
@@ -266,40 +242,28 @@ namespace MunicipalServicesApp
             lblProgress.Text =
                 "Let's get started! Complete the fields above to report your issue.";
 
-            lblProgress.Font =
-                new Font(
-                    "Segoe UI",
-                    10,
-                    FontStyle.Bold
-                );
+            lblProgress.Font = new Font(
+                "Segoe UI",
+                10,
+                FontStyle.Bold
+            );
 
-            lblProgress.ForeColor =
-                darkBlue;
-
-            lblProgress.Location =
-                new Point(15, 10);
-
+            lblProgress.ForeColor = darkBlue;
+            lblProgress.Location = new Point(15, 10);
             lblProgress.AutoSize = true;
 
-            engagementPanel.Controls.Add(
-                lblProgress
-            );
+            engagementPanel.Controls.Add(lblProgress);
 
             progressBar = new ProgressBar();
 
-            progressBar.Location =
-                new Point(15, 42);
-
-            progressBar.Size =
-                new Size(790, 15);
+            progressBar.Location = new Point(15, 42);
+            progressBar.Size = new Size(790, 15);
 
             progressBar.Minimum = 0;
             progressBar.Maximum = 100;
             progressBar.Value = 0;
 
-            engagementPanel.Controls.Add(
-                progressBar
-            );
+            engagementPanel.Controls.Add(progressBar);
 
             // ==========================
             // BUTTONS
@@ -307,57 +271,37 @@ namespace MunicipalServicesApp
 
             btnBack = new Button();
 
-            btnBack.Text =
-                "← Back to Main Menu";
-
-            btnBack.Location =
-                new Point(40, 600);
-
-            btnBack.Size =
-                new Size(200, 45);
+            btnBack.Text = "← Back to Main Menu";
+            btnBack.Location = new Point(40, 600);
+            btnBack.Size = new Size(200, 45);
 
             btnBack.BackColor =
                 Color.FromArgb(100, 116, 139);
 
-            btnBack.ForeColor =
-                white;
+            btnBack.ForeColor = white;
+            btnBack.FlatStyle = FlatStyle.Flat;
+            btnBack.FlatAppearance.BorderSize = 0;
 
-            btnBack.FlatStyle =
-                FlatStyle.Flat;
+            btnBack.Font = new Font(
+                "Segoe UI",
+                10,
+                FontStyle.Bold
+            );
 
-            btnBack.FlatAppearance.BorderSize =
-                0;
-
-            btnBack.Font =
-                new Font(
-                    "Segoe UI",
-                    10,
-                    FontStyle.Bold
-                );
-
-            btnBack.Cursor =
-                Cursors.Hand;
-
-            btnBack.Click +=
-                BtnBack_Click;
+            btnBack.Cursor = Cursors.Hand;
+            btnBack.Click += BtnBack_Click;
 
             this.Controls.Add(btnBack);
 
             btnSubmit = new Button();
 
-            btnSubmit.Text =
-                "Submit Issue";
-
-            btnSubmit.Location =
-                new Point(660, 600);
-
-            btnSubmit.Size =
-                new Size(200, 45);
+            btnSubmit.Text = "Submit Issue";
+            btnSubmit.Location = new Point(660, 600);
+            btnSubmit.Size = new Size(200, 45);
 
             StylePrimaryButton(btnSubmit);
 
-            btnSubmit.Click +=
-                BtnSubmit_Click;
+            btnSubmit.Click += BtnSubmit_Click;
 
             this.Controls.Add(btnSubmit);
         }
@@ -371,19 +315,14 @@ namespace MunicipalServicesApp
 
             label.Text = text;
 
-            label.Font =
-                new Font(
-                    "Segoe UI",
-                    10,
-                    FontStyle.Bold
-                );
+            label.Font = new Font(
+                "Segoe UI",
+                10,
+                FontStyle.Bold
+            );
 
-            label.ForeColor =
-                textDark;
-
-            label.Location =
-                new Point(x, y);
-
+            label.ForeColor = textDark;
+            label.Location = new Point(x, y);
             label.AutoSize = true;
 
             return label;
@@ -391,27 +330,18 @@ namespace MunicipalServicesApp
 
         private void StylePrimaryButton(Button button)
         {
-            button.BackColor =
-                primaryBlue;
+            button.BackColor = primaryBlue;
+            button.ForeColor = white;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
 
-            button.ForeColor =
-                white;
+            button.Font = new Font(
+                "Segoe UI",
+                10,
+                FontStyle.Bold
+            );
 
-            button.FlatStyle =
-                FlatStyle.Flat;
-
-            button.FlatAppearance.BorderSize =
-                0;
-
-            button.Font =
-                new Font(
-                    "Segoe UI",
-                    10,
-                    FontStyle.Bold
-                );
-
-            button.Cursor =
-                Cursors.Hand;
+            button.Cursor = Cursors.Hand;
         }
 
         // ==========================
@@ -429,8 +359,7 @@ namespace MunicipalServicesApp
         {
             int progress = 0;
 
-            if (!string.IsNullOrWhiteSpace(
-                txtLocation.Text))
+            if (!string.IsNullOrWhiteSpace(txtLocation.Text))
             {
                 progress += 25;
             }
@@ -440,14 +369,12 @@ namespace MunicipalServicesApp
                 progress += 25;
             }
 
-            if (!string.IsNullOrWhiteSpace(
-                txtDescription.Text))
+            if (!string.IsNullOrWhiteSpace(txtDescription.Text))
             {
                 progress += 25;
             }
 
-            if (!string.IsNullOrWhiteSpace(
-                selectedAttachmentPath))
+            if (!string.IsNullOrWhiteSpace(selectedAttachmentPath))
             {
                 progress += 25;
             }
@@ -484,29 +411,23 @@ namespace MunicipalServicesApp
             object sender,
             EventArgs e)
         {
-            using (OpenFileDialog dialog =
-                new OpenFileDialog())
+            using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                dialog.Title =
-                    "Select supporting file";
+                dialog.Title = "Select supporting file";
 
                 dialog.Filter =
                     "Images and Documents|*.jpg;*.jpeg;*.png;*.gif;*.pdf;*.doc;*.docx|All Files|*.*";
 
                 dialog.Multiselect = false;
 
-                if (dialog.ShowDialog() ==
-                    DialogResult.OK)
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    selectedAttachmentPath =
-                        dialog.FileName;
+                    selectedAttachmentPath = dialog.FileName;
 
                     lblAttachment.Text =
-                        Path.GetFileName(
-                            selectedAttachmentPath);
+                        Path.GetFileName(selectedAttachmentPath);
 
-                    lblAttachment.ForeColor =
-                        darkBlue;
+                    lblAttachment.ForeColor = darkBlue;
 
                     UpdateProgress();
                 }
@@ -514,91 +435,197 @@ namespace MunicipalServicesApp
         }
 
         // ==========================
-        // SUBMIT
+        // SUBMIT ISSUE
         // ==========================
 
         private void BtnSubmit_Click(
             object sender,
             EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(
-                txtLocation.Text))
+            // Validate location
+            if (string.IsNullOrWhiteSpace(txtLocation.Text))
             {
                 MessageBox.Show(
                     "Please enter the location of the issue.",
-                    "Missing Information",
+                    "Missing Location",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
 
                 txtLocation.Focus();
-
                 return;
             }
 
+            // Validate category
             if (cmbCategory.SelectedIndex == -1)
             {
                 MessageBox.Show(
                     "Please select an issue category.",
-                    "Missing Information",
+                    "Missing Category",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
 
                 cmbCategory.Focus();
-
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(
-                txtDescription.Text))
+            // Validate description
+            if (string.IsNullOrWhiteSpace(txtDescription.Text))
             {
                 MessageBox.Show(
                     "Please provide a description of the issue.",
-                    "Missing Information",
+                    "Missing Description",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning
                 );
 
                 txtDescription.Focus();
-
                 return;
             }
 
-            Issue newIssue = new Issue();
+            try
+            {
+                string category =
+                    cmbCategory.SelectedItem.ToString()!;
 
-            newIssue.IssueID =
-                reportedIssues.Count + 1;
+                // Generate a unique service request reference
+                string referenceNumber =
+                    GenerateServiceRequestReference();
 
-            newIssue.Location =
-                txtLocation.Text.Trim();
+                // Determine the responsible department
+                ServiceDepartment department =
+                    GetDepartment(category);
 
-            newIssue.Category =
-                cmbCategory.SelectedItem.ToString();
+                // Create the existing Issue record
+                Issue newIssue = new Issue
+                {
+                    IssueID = reportedIssues.Count + 1,
+                    Location = txtLocation.Text.Trim(),
+                    Category = category,
+                    Description = txtDescription.Text.Trim(),
+                    AttachmentPath = selectedAttachmentPath,
+                    DateReported = DateTime.Now
+                };
 
-            newIssue.Description =
-                txtDescription.Text.Trim();
+                // Create the ServiceRequest record
+                ServiceRequest newRequest = new ServiceRequest
+                {
+                    ReferenceNumber = referenceNumber,
+                    ResidentName = "Resident",
+                    Location = txtLocation.Text.Trim(),
+                    Category = category,
+                    Description = txtDescription.Text.Trim(),
+                    Department = department,
+                    Status = ServiceRequestStatus.Submitted,
+                    Priority = ServiceRequestPriority.Normal,
+                    DateSubmitted = DateTime.Now
+                };
 
-            newIssue.AttachmentPath =
-                selectedAttachmentPath;
+                // Add the initial status history entry
+                newRequest.StatusHistory.Add(
+                    new ServiceRequestStatusEntry(
+                        ServiceRequestStatus.Submitted,
+                        "Service request submitted by resident.",
+                        DateTime.Now,
+                        "Resident"
+                    )
+                );
 
-            newIssue.DateReported =
-                DateTime.Now;
+                // Save the service request to the shared repository
+                ServiceRequestRepository.Add(newRequest);
 
-            reportedIssues.Add(newIssue);
+                // Keep the original issue record as well
+                reportedIssues.Add(newIssue);
 
-            MessageBox.Show(
-                "Your issue has been reported successfully!\n\n" +
-                "Issue Reference: MS-" +
-                newIssue.IssueID.ToString("D4") +
-                "\n\n" +
-                "Thank you for helping improve your community.",
-                "Report Submitted",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
-            );
+                MessageBox.Show(
+                    "Your issue has been reported successfully!\n\n" +
+                    "Service Request Reference: " + referenceNumber +
+                    "\nDepartment: " + department +
+                    "\nStatus: Submitted" +
+                    "\n\nYou can use this reference number to track your request.",
+                    "Report Submitted",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
 
-            ClearForm();
+                ClearForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "An error occurred while submitting your issue:\n\n" +
+                    ex.Message,
+                    "Submission Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+        }
+
+        // ==========================
+        // GENERATE REQUEST REFERENCE
+        // ==========================
+
+        private string GenerateServiceRequestReference()
+        {
+            int year = DateTime.Now.Year;
+
+            string prefix = $"SR-{year}-";
+
+            int highestNumber = 0;
+
+            foreach (ServiceRequest request in ServiceRequestRepository.GetAll())
+            {
+                if (request.ReferenceNumber.StartsWith(
+                    prefix,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    string numberPart =
+                        request.ReferenceNumber.Substring(prefix.Length);
+
+                    if (int.TryParse(numberPart, out int number))
+                    {
+                        if (number > highestNumber)
+                        {
+                            highestNumber = number;
+                        }
+                    }
+                }
+            }
+
+            return $"{prefix}{highestNumber + 1:D4}";
+        }
+
+        // ==========================
+        // MAP ISSUE CATEGORY
+        // TO MUNICIPAL DEPARTMENT
+        // ==========================
+
+        private ServiceDepartment GetDepartment(string category)
+        {
+            switch (category)
+            {
+                case "Roads":
+                    return ServiceDepartment.Roads;
+
+                case "Water Supply":
+                case "Sanitation":
+                    return ServiceDepartment.WaterAndSanitation;
+
+                case "Electricity":
+                case "Street Lighting":
+                    return ServiceDepartment.Electricity;
+
+                case "Waste Management":
+                    return ServiceDepartment.WasteManagement;
+
+                case "Public Safety":
+                    return ServiceDepartment.PublicSafety;
+
+                default:
+                    return ServiceDepartment.GeneralServices;
+            }
         }
 
         // ==========================
@@ -615,8 +642,7 @@ namespace MunicipalServicesApp
 
             selectedAttachmentPath = "";
 
-            lblAttachment.Text =
-                "No file selected";
+            lblAttachment.Text = "No file selected";
 
             lblAttachment.ForeColor =
                 Color.FromArgb(100, 116, 139);
